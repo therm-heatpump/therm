@@ -1,0 +1,19 @@
+configuration:
+  influx_host:
+    name: InfluxDB host
+    description: >-
+      Leave empty if you don't use InfluxDB. For the InfluxDB add-on use
+      a0d7b954-influxdb.
+  influx_port:
+    name: InfluxDB port
+  influx_database:
+    name: InfluxDB database
+    description: The database Home Assistant's InfluxDB integration writes to.
+  influx_username:
+    name: InfluxDB username
+  influx_password:
+    name: InfluxDB password
+  influx_ssl:
+    name: Use HTTPS for InfluxDB
+  log_level:
+    name: Log level

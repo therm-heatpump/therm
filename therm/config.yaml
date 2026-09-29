@@ -1,0 +1,57 @@
+name: therm
+version: "0.1.0"
+slug: therm
+description: Heat pump performance analysis (COP, runs, DHW, defrost, data quality) from your Home Assistant or InfluxDB history.
+url: https://github.com/therm-heatpump/therm
+stage: experimental
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: application
+boot: manual
+
+# Opened from the HA sidebar through Ingress; no port is exposed by default.
+ingress: true
+ingress_port: 8501
+# Restart the add-on if the Ingress gate stops answering (run.sh also exits when
+# either nginx or Streamlit dies, so the Supervisor sees the failure).
+watchdog: tcp://[HOST]:[PORT:8501]
+panel_icon: mdi:heat-pump
+panel_title: therm
+# Sidebar panel for administrators only (the default, stated explicitly).
+panel_admin: true
+
+# Supervisor-proxied Home Assistant API: entity registry, history, statistics.
+homeassistant_api: true
+
+# The add-on's own config folder is mounted at /config (THERM_DATA_DIR): saved
+# profiles live in /config/profiles, visible over Samba as
+# addon_configs/<id>_therm/profiles and included in HA backups.
+map:
+  - type: app_config
+    read_only: false
+backup_exclude:
+  - "cache/*"
+
+options:
+  influx_host: ""
+  influx_port: 8086
+  influx_database: homeassistant
+  # Listed with empty defaults so the fields are always shown in the UI
+  # (optional "str?" fields are hidden behind "Show unused optional options").
+  influx_username: ""
+  influx_password: ""
+  influx_ssl: false
+  log_level: info
+schema:
+  influx_host: str?
+  influx_port: port
+  influx_database: str
+  influx_username: str
+  influx_password: password
+  influx_ssl: bool
+  log_level: list(debug|info|warning|error)
+
+# No prebuilt images yet: the Supervisor builds the add-on locally from the Dockerfile.
+# image: ghcr.io/therm-heatpump/{arch}-addon-therm
